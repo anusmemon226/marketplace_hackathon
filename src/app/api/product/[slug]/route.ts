@@ -1,6 +1,6 @@
 import { type SanityDocument } from "next-sanity";
 import { client } from "@/sanity/client";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
     const { slug } = await params
