@@ -9,12 +9,12 @@ const CartBody = () => {
     const { cartProducts, updateCartProducts } = useStore()
     const [total, setTotal] = useState(0)
     const handleTargetQuantityCount = (e: React.ChangeEvent<HTMLInputElement>, product_name: string) => {
-        let newQuantity = Number(e.target.value)
+        const newQuantity = Number(e.target.value)
 
         let existingCartProducts = localStorage.getItem("CartProducts")
         existingCartProducts = JSON.parse(existingCartProducts!)
 
-        let newCartProducts = Array.isArray(existingCartProducts) && existingCartProducts.length > 0 ?
+        const newCartProducts = Array.isArray(existingCartProducts) && existingCartProducts.length > 0 ?
             existingCartProducts.map((cartProduct) => {
                 return cartProduct.productData.product_name === product_name ?
                     {
@@ -35,7 +35,7 @@ const CartBody = () => {
     const deleteCartProduct = (product_name: string) => {
         let currentCartProducts = localStorage.getItem("CartProducts")
         currentCartProducts = JSON.parse(currentCartProducts!)
-        let updatedCartProducts = Array.isArray(currentCartProducts) ?
+        const updatedCartProducts = Array.isArray(currentCartProducts) ?
             currentCartProducts.filter((cartProduct) => cartProduct.productData.product_name != product_name)
             :
             null

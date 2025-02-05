@@ -1,10 +1,19 @@
 import { client } from "@/sanity/client";
 import { NextResponse } from "next/server";
 const generateKey = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+type order_item = {
+    product: string,
+    quantity: string,
+    variation: {
+        _key:string
+        variation_name:string,
+        variation_option:string
+    },
+    price: string
+}
 export async function POST(request: Request) {
     const formData = await request.json()
-    console.log(formData)
-    const order_items = formData.productData.map((order_item: any,index:number) => {
+    const order_items = formData.productData.map((order_item: order_item) => {
         return {
             _key: generateKey(),
             product: {
