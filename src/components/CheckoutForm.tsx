@@ -28,7 +28,6 @@ function CheckoutForm() {
     const [countries, setCountries] = useState([])
     const [cities, setCities] = useState([])
     const [citiesByCountry, setCitiesByCountry] = useState([])
-    console.log(citiesByCountry)
     const [checkoutForm, setCheckoutForm] = useState({
         firstname: "",
         lastname: "",
@@ -42,12 +41,12 @@ function CheckoutForm() {
         addition_info: ""
     })
     const fetchCountry = async () => {
-        const data = await fetch("https://hiperstar.vercel.app/api/country")
+        const data = await fetch("/api/country")
         const countries = await data.json()
         setCountries(countries)
     }
     const fetchCity = async () => {
-        const data = await fetch("https://hiperstar.vercel.app/api/city")
+        const data = await fetch("/api/city")
         const cities = await data.json()
         setCities(cities)
     }

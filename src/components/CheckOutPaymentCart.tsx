@@ -56,13 +56,13 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     price: product.quantity * product.productData.price
                 }
             })
-            let customers = await (await fetch("https://hiperstar.vercel.app/api/customers")).json()
+            let customers = await (await fetch("/api/customers")).json()
             customers = customers.filter((customer: {email:string,_id:string}) => {
                 return customer.email == formData.email
             })
 
             if (customers.length > 0) {
-                fetch("https://hiperstar.vercel.app/api/orders", {
+                fetch("/api/orders", {
                     method: "POST",
                     body: JSON.stringify(
                         {
@@ -97,7 +97,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     }
                 })
             } else {
-                fetch("https://hiperstar.vercel.app/api/customers", {
+                fetch("/api/customers", {
                     method: "POST",
                     body: JSON.stringify(formData),
                     headers: {
@@ -107,7 +107,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     return res.json()
                 }).then((data) => {
                     if (data.transactionId) {
-                        fetch("https://hiperstar.vercel.app/api/orders", {
+                        fetch("/api/orders", {
                             method: "POST",
                             body: JSON.stringify(
                                 {
