@@ -4,7 +4,7 @@ import { cartProduct } from '@/types'
 import { urlFor } from '@/utils/sanityImageBuilder'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 type drawerType = { showDrawer: boolean, setShowDrawer: (status: boolean) => void }
 
@@ -13,13 +13,13 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
     const { cartProducts, updateCartProducts } = useStore()
     const [subTotal, setSubTotal] = useState(0)
 
-    const calculatingTotal = () => {
+    const calculatingTotal = useCallback(() => {
         let total: number = 0
         cartProducts.map((cartProduct: cartProduct) => {
             total += cartProduct.productData.price * cartProduct.quantity
         })
         return total
-    }
+    }, [cartProducts])
 
     const removeCartProduct = (cartProducts: cartProduct) => {
         let currentCartProducts = localStorage.getItem("CartProducts")
