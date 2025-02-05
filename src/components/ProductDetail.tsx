@@ -23,6 +23,8 @@ const ProductDetail = ({ slug }: { slug: string }) => {
     const filteredProduct = products.filter((product: productData) => {
         return product.slug.current == slug
     })
+
+    
     const handleCurrentVariation = (var_name: string, var_option: string) => {
         setCurrentVariation((prevVariations) =>
             prevVariations.map((variation) =>

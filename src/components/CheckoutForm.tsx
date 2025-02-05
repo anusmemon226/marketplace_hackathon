@@ -42,12 +42,12 @@ function CheckoutForm() {
         addition_info: ""
     })
     const fetchCountry = async () => {
-        const data = await fetch("http://localhost:3000/api/country")
+        const data = await fetch("https://hiperstar.vercel.app/api/country")
         const countries = await data.json()
         setCountries(countries)
     }
     const fetchCity = async () => {
-        const data = await fetch("http://localhost:3000/api/city")
+        const data = await fetch("https://hiperstar.vercel.app/api/city")
         const cities = await data.json()
         setCities(cities)
     }

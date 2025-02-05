@@ -43,7 +43,7 @@ function Navbar() {
             setShowNavbar(false)
         })
         setCartProductsIfExist()
-    }, [null])
+    }, [])
 
     useEffect(() => {
         setCartCount(cartProducts.length)
