@@ -57,7 +57,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                 }
             })
             let customers = await (await fetch("/api/customers")).json()
-            customers = customers.filter((customer: {email:string,_id:string}) => {
+            customers = customers.filter((customer: { email: string, _id: string }) => {
                 return customer.email == formData.email
             })
 
@@ -95,60 +95,52 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                         updateCartProducts([])
                         alert("Order Successfully Created")
                     }
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err)
                 })
             } else {
-                fetch("/api/customers", {
+                const createCustomer = await fetch("/api/customers", {
                     method: "POST",
                     body: JSON.stringify(formData),
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                }).then((res) => {
-                    return res.json()
-                }).then((data) => {
-                    console.log(data)
-                    // if (data.transactionId) {
-                    //     fetch("/api/orders", {
-                    //         method: "POST",
-                    //         body: JSON.stringify(
-                    //             {
-                    //                 customer: data.documentIds[0],
-                    //                 productData,
-                    //                 total_price: total,
-                    //                 order_note: formData.addition_info,
-                    //             }
-                    //         ),
-                    //         headers: {
-                    //             'Content-Type': 'application/json'
-                    //         }
-                    //     }).then((resp) => {
-                    //         return resp.json()
-                    //     }).then((res) => {
-                    //         if (res.transactionId != "") {
-                    //             setData({
-                    //                 firstname: "",
-                    //                 lastname: "",
-                    //                 companyName: "",
-                    //                 country: "",
-                    //                 city: "",
-                    //                 zipcode: "",
-                    //                 phone: "",
-                    //                 email: "",
-                    //                 address: "",
-                    //                 addition_info: ""
-                    //             })
-                    //             localStorage.removeItem("CartProducts")
-                    //             updateCartProducts([])
-                    //             alert("Order Successfully Created")
-                    //         }
-                    //     })
-                    // }
-                }).catch((err) => {
-                    console.log(err)
-                    alert("Error Creating Order")
                 })
+                const response = await createCustomer.json()
+                if (response.transactionId) {
+                    const createOrder = await fetch("/api/orders", {
+                        method: "POST",
+                        body: JSON.stringify(
+                            {
+                                customer: response.documentIds[0],
+                                productData,
+                                total_price: total,
+                                order_note: formData.addition_info,
+                            }
+                        ),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    const orderResponse = await createOrder.json()
+                    if (orderResponse.transactionId != "") {
+                        setData({
+                            firstname: "",
+                            lastname: "",
+                            companyName: "",
+                            country: "",
+                            city: "",
+                            zipcode: "",
+                            phone: "",
+                            email: "",
+                            address: "",
+                            addition_info: ""
+                        })
+                        localStorage.removeItem("CartProducts")
+                        updateCartProducts([])
+                        alert("Order Successfully Created")
+                    }
+                }
             }
 
 

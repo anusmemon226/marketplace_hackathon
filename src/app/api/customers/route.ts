@@ -33,6 +33,5 @@ export async function POST(request: Request) {
             }
         }
     ])
-    console.log(createCustomer)
-    return new NextResponse("Hello")
+    return NextResponse.json(createCustomer)
 }
