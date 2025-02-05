@@ -108,42 +108,43 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                 }).then((res) => {
                     return res.json()
                 }).then((data) => {
-                    if (data.transactionId) {
-                        fetch("/api/orders", {
-                            method: "POST",
-                            body: JSON.stringify(
-                                {
-                                    customer: data.documentIds[0],
-                                    productData,
-                                    total_price: total,
-                                    order_note: formData.addition_info,
-                                }
-                            ),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }).then((resp) => {
-                            return resp.json()
-                        }).then((res) => {
-                            if (res.transactionId != "") {
-                                setData({
-                                    firstname: "",
-                                    lastname: "",
-                                    companyName: "",
-                                    country: "",
-                                    city: "",
-                                    zipcode: "",
-                                    phone: "",
-                                    email: "",
-                                    address: "",
-                                    addition_info: ""
-                                })
-                                localStorage.removeItem("CartProducts")
-                                updateCartProducts([])
-                                alert("Order Successfully Created")
-                            }
-                        })
-                    }
+                    console.log(data)
+                    // if (data.transactionId) {
+                    //     fetch("/api/orders", {
+                    //         method: "POST",
+                    //         body: JSON.stringify(
+                    //             {
+                    //                 customer: data.documentIds[0],
+                    //                 productData,
+                    //                 total_price: total,
+                    //                 order_note: formData.addition_info,
+                    //             }
+                    //         ),
+                    //         headers: {
+                    //             'Content-Type': 'application/json'
+                    //         }
+                    //     }).then((resp) => {
+                    //         return resp.json()
+                    //     }).then((res) => {
+                    //         if (res.transactionId != "") {
+                    //             setData({
+                    //                 firstname: "",
+                    //                 lastname: "",
+                    //                 companyName: "",
+                    //                 country: "",
+                    //                 city: "",
+                    //                 zipcode: "",
+                    //                 phone: "",
+                    //                 email: "",
+                    //                 address: "",
+                    //                 addition_info: ""
+                    //             })
+                    //             localStorage.removeItem("CartProducts")
+                    //             updateCartProducts([])
+                    //             alert("Order Successfully Created")
+                    //         }
+                    //     })
+                    // }
                 }).catch((err) => {
                     console.log(err)
                     alert("Error Creating Order")

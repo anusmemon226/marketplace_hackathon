@@ -12,8 +12,7 @@ export async function GET() {
 }
 export async function POST(request: Request) {
     const formData = await request.json()
-    console.log("Customers ->",formData)
-    const createCustomer = client.mutate([
+    const createCustomer = await client.mutate([
         {
             create: {
                 _type: "customer",
@@ -23,7 +22,7 @@ export async function POST(request: Request) {
                 firstname: formData.firstname,
                 lastname: formData.lastname,
                 account_creation_date: new Date().toISOString(),
-                username: formData.firstname + "" + formData.lastname,
+                username: formData.firstname.toLowerCase() + "" + formData.lastname.toLowerCase(),
                 phone_number: formData.phone,
                 city: {
                     _ref: formData.city
@@ -34,5 +33,5 @@ export async function POST(request: Request) {
             }
         }
     ])
-    return NextResponse.json(await createCustomer)
+    return NextResponse.json(createCustomer)
 }
