@@ -34,5 +34,5 @@ export async function POST(request: Request) {
     //     }
     // ])
     // return NextResponse.json(createCustomer)
-    return NextResponse.json({name:"Hello"})
+    return NextResponse.json({data:formData})
 }
