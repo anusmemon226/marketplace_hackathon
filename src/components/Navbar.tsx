@@ -32,7 +32,7 @@ function Navbar() {
         setProducts(resp)
     }
     const setCartProductsIfExist = () => {
-        let cartProducts: cartProduct[] = JSON.parse(localStorage.getItem("CartProducts")!)
+        const cartProducts: cartProduct[] = JSON.parse(localStorage.getItem("CartProducts")!)
         cartProducts?.map((cartProduct:cartProduct) => {
             setCartProducts(cartProduct)
         })

@@ -44,18 +44,17 @@ const ProductDetail = ({ slug }: { slug: string }) => {
 
     useEffect(() => {
         if (products.length > 0) {
-            const initialVariation = filteredProduct[0]?.variation_details?.map((variation: variation) => {
-                return {
-                    _key: generateKey(),
-                    variation_name: variation.variation_name,
-                    variation_option: variation.variation_options[0]
-                }
-            })
-            setCurrentVariation([...currentVariation, ...initialVariation])
-
+            setCurrentVariation((prevVariation) =>
+                [...prevVariation, ...filteredProduct[0]?.variation_details?.map((variation: variation) => {
+                    return {
+                        _key: generateKey(),
+                        variation_name: variation.variation_name,
+                        variation_option: variation.variation_options[0]
+                    }
+                })]
+            )
             const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
             setMainImage(main_image!)
-
             const sideImages = filteredProduct[0]?.product_images?.map((product_image: string) => {
                 return urlFor(product_image)?.url()
             })
