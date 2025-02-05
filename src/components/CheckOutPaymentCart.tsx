@@ -1,30 +1,54 @@
 "use client"
 import { useStore } from '@/store'
+import { cartProduct } from '@/types';
 import React, { useEffect, useState } from 'react'
 
-const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: any) => {
+type checkoutForm = {
+    firstname: string;
+    lastname: string;
+    companyName: string;
+    country: string;
+    city: string;
+    zipcode: string;
+    phone: string;
+    email: string;
+    address: string;
+    addition_info: string;
+}
+
+type setData = React.Dispatch<React.SetStateAction<{
+    firstname: string;
+    lastname: string;
+    companyName: string;
+    country: string;
+    city: string;
+    zipcode: string;
+    phone: string;
+    email: string;
+    address: string;
+    addition_info: string;
+}>>
+
+const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: checkoutForm, setData: setData, setIsEmpty: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const { cartProducts, updateCartProducts } = useStore()
     const [total, setTotal] = useState(0)
     const handleCheckoutFOrmData = async () => {
 
-        if(cartProducts.length==0){
+        if (cartProducts.length == 0) {
             alert("Please add Products to cart...!")
             return
         }
 
         let flag = false
-        for (let key in formData) {
-            if (key !== "companyName" && key !== "addition_info") {
-                if (formData[key] == "") {
-                    flag = true
-                    break
-                }
-            }
+
+        if (formData.address == "" || formData.city == "" || formData.country == "" || formData.email == "" || formData.firstname == "" || formData.lastname == "" || formData.phone == "" || formData.zipcode == "") {
+            flag = true
         }
+
         if (flag == true) {
             setIsEmpty(true)
         } else {
-            const productData = cartProducts.map((product: any) => {
+            const productData = cartProducts.map((product: cartProduct) => {
                 return {
                     product: product.productData._id,
                     quantity: product.quantity,
@@ -118,7 +142,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: any) => {
                             }
                         })
                     }
-                }).catch((err) => {
+                }).catch(() => {
                     alert("Error Creating Order")
                 })
             }
@@ -130,7 +154,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: any) => {
 
     useEffect(() => {
         let total = 0
-        cartProducts.map((cartProduct: any) => {
+        cartProducts.map((cartProduct: cartProduct) => {
             total += cartProduct.productData.price * cartProduct.quantity
         })
         setTotal(Number(total.toFixed(2)))
@@ -143,7 +167,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: any) => {
                 <p className='text-[24px] font-medium'>Subtotal</p>
             </div>
             {
-                cartProducts.map((cartProduct: any, index: number) => {
+                cartProducts.map((cartProduct: cartProduct, index: number) => {
                     return <div key={index} className='flex flex-wrap justify-between items-center my-3'>
                         <div className='flex items-center gap-x-4'>
                             <p className='text-[16px] text-[#9F9F9F]'>{cartProduct.productData.product_name}</p>

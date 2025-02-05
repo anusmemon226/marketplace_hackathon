@@ -13,7 +13,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
 
     const [mainImage, setMainImage] = useState<string | null>(null)
     const [sideImages, setSideImages] = useState<string[]>([])
-    const [currentVariation, setCurrentVariation] = useState<{ _key: String, variation_name: string, variation_option: string }[]>([])
+    const [currentVariation, setCurrentVariation] = useState<{ _key: string, variation_name: string, variation_option: string }[]>([])
     const filteredProduct = products.filter((product: any) => {
         return product.slug.current == slug
     })

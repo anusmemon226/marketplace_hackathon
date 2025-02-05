@@ -1,5 +1,6 @@
 "use client"
 import { useStore } from '@/store';
+import { cartProduct } from '@/types';
 import { urlFor } from '@/utils/sanityImageBuilder';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -48,7 +49,7 @@ const CartBody = () => {
 
     useEffect(() => {
         let total = 0
-        cartProducts.map((cartProduct: any) => {
+        cartProducts.map((cartProduct: cartProduct) => {
             total += cartProduct.productData.price * cartProduct.quantity
         })
         setTotal(Number(total.toFixed(2)))
@@ -72,7 +73,7 @@ const CartBody = () => {
 
                         {
                             cartProducts.length > 0 ?
-                                cartProducts.map((cartProduct: any, index: any) => {
+                                cartProducts.map((cartProduct: cartProduct, index: number) => {
                                     const productImage = urlFor(cartProduct?.productData?.main_image)?.url()
                                     return <tr className='' key={index}>
                                         <td className=''>

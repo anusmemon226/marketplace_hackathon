@@ -1,5 +1,6 @@
 "use client"
 import { useStore } from '@/store'
+import { cartProduct } from '@/types'
 import { urlFor } from '@/utils/sanityImageBuilder'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -13,9 +14,9 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
     const [subTotal, setSubTotal] = useState(0)
 
     const calculatingTotal = () => {
-        let total = 0
+        let total: number = 0
         cartProducts.length > 0 ?
-            cartProducts.map((cartProduct: any) => {
+            cartProducts.map((cartProduct: cartProduct) => {
                 total += cartProduct.productData.price * cartProduct.quantity
             })
             :
@@ -23,10 +24,10 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
         return total
     }
 
-    const removeCartProduct = (cartProducts: any) => {
+    const removeCartProduct = (cartProducts: cartProduct) => {
         let currentCartProducts = localStorage.getItem("CartProducts")
         currentCartProducts = JSON.parse(currentCartProducts!)
-        let updatedCartProducts = Array.isArray(currentCartProducts) ?
+        const updatedCartProducts = Array.isArray(currentCartProducts) ?
             currentCartProducts.filter((cartProduct) => cartProduct.productData.slug.current != cartProducts.productData.slug.current)
             :
             null
@@ -57,7 +58,7 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
 
                     {
                         cartProducts.length > 0 ?
-                            cartProducts.map((cartProduct: any, index: any) => {
+                            cartProducts.map((cartProduct: cartProduct, index: number) => {
                                 const productImage = cartProduct.productData.main_image ? urlFor(cartProduct.productData.main_image)?.url() : null
                                 return <div key={index} className='flex justify-between items-center my-3'>
                                     <div className='flex flex-1 flex-wrap items-center'>

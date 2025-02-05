@@ -1,40 +1,11 @@
 "use client"
 import { useStore } from '@/store'
+import { cartProduct, productData } from '@/types'
 import React from 'react'
 
-type productData = {
-    added_at: string
-    category: { category_name: string }
-    description: string
-    main_image: { _type: string, asset: { _ref: string, _type: string } }
-    price: number
-    product_images: {
-        asset: {
-            _ref: string,
-            _type: string
-        },
-        _key: string,
-        _type: string
-    }[]
-    product_name: string
-    rating: number
-    slug: { current: string, _type: string }
-    stock: number
-    variation_details: []
-    _id: string
-}
 
-type cartProduct = {
-    quantity: number,
-    variation: {
-        variation_name:string
-        variation_option:string
-        _key:string
-    }[],
-    productData : productData
-}
 
-const AddToCartButton = ({ productData, variation, quantity }: { productData: productData, variation: { _key: String, variation_name: string, variation_option: string }[], quantity: number }) => {
+const AddToCartButton = ({ productData, variation, quantity }: { productData: productData, variation: { _key: string, variation_name: string, variation_option: string }[], quantity: number }) => {
     const { setCartProducts } = useStore()
     const addToCart = () => {
         const cartProducts = localStorage.getItem("CartProducts")
