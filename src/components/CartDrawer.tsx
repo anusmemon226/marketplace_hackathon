@@ -15,12 +15,9 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
 
     const calculatingTotal = () => {
         let total: number = 0
-        cartProducts.length > 0 ?
-            cartProducts.map((cartProduct: cartProduct) => {
-                total += cartProduct.productData.price * cartProduct.quantity
-            })
-            :
-            null
+        cartProducts.map((cartProduct: cartProduct) => {
+            total += cartProduct.productData.price * cartProduct.quantity
+        })
         return total
     }
 
@@ -42,7 +39,7 @@ const CartDrawer = ({ showDrawer, setShowDrawer }: drawerType) => {
         let total = calculatingTotal()
         total = Number(total.toFixed(2))
         setSubTotal(total)
-    }, [cartProducts])
+    }, [calculatingTotal])
 
     return (
         <div className={`bg-black/20 transition-all duration-500 ${showDrawer ? "visible opacity-1" : "invisible opacity-0"} w-full h-full absolute top-0 z-10 overflow-hidden`} onClick={() => setShowDrawer(false)}>
