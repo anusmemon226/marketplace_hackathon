@@ -32,9 +32,8 @@ function Navbar() {
         setProducts(resp)
     }
     const setCartProductsIfExist = () => {
-        let cartProducts: string | null  = localStorage.getItem("CartProducts")
-        cartProducts = JSON.parse(cartProducts!)
-        Array.isArray(cartProducts) && cartProducts?.map((cartProduct:cartProduct) => {
+        let cartProducts: cartProduct[] = JSON.parse(localStorage.getItem("CartProducts")!)
+        cartProducts?.map((cartProduct:cartProduct) => {
             setCartProducts(cartProduct)
         })
     }

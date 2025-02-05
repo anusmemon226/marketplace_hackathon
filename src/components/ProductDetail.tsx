@@ -17,14 +17,12 @@ type variation = {
 const ProductDetail = ({ slug }: { slug: string }) => {
     const { products } = useStore()
     const [quantity, setQuantity] = useState(1)
-
     const [mainImage, setMainImage] = useState<string | null>(null)
     const [sideImages, setSideImages] = useState<string[]>([])
     const [currentVariation, setCurrentVariation] = useState<{ _key: string, variation_name: string, variation_option: string }[]>([])
     const filteredProduct = products.filter((product: productData) => {
         return product.slug.current == slug
     })
-
     const handleCurrentVariation = (var_name: string, var_option: string) => {
         setCurrentVariation((prevVariations) =>
             prevVariations.map((variation) =>
@@ -45,23 +43,24 @@ const ProductDetail = ({ slug }: { slug: string }) => {
     };
 
     useEffect(() => {
-        const initialVariation = filteredProduct[0]?.variation_details?.map((variation: variation) => {
-            return {
-                _key: generateKey(),
-                variation_name: variation.variation_name,
-                variation_option: variation.variation_options[0]
-            }
-        })
-        setCurrentVariation([...currentVariation, ...initialVariation])
+        if (products.length > 0) {
+            const initialVariation = filteredProduct[0]?.variation_details?.map((variation: variation) => {
+                return {
+                    _key: generateKey(),
+                    variation_name: variation.variation_name,
+                    variation_option: variation.variation_options[0]
+                }
+            })
+            setCurrentVariation([...currentVariation, ...initialVariation])
 
-        const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
-        setMainImage(main_image!)
+            const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
+            setMainImage(main_image!)
 
-        const sideImages = filteredProduct[0]?.product_images?.map((product_image: string) => {
-            return urlFor(product_image)?.url()
-        })
-        setSideImages(sideImages)
-
+            const sideImages = filteredProduct[0]?.product_images?.map((product_image: string) => {
+                return urlFor(product_image)?.url()
+            })
+            setSideImages(sideImages)
+        }
     }, [products])
 
     return (
