@@ -12,6 +12,7 @@ export async function GET() {
 }
 export async function POST(request: Request) {
     const formData = await request.json()
+    console.log("Customers ->",formData)
     const createCustomer = client.mutate([
         {
             create: {

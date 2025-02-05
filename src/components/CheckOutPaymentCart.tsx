@@ -95,6 +95,8 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                         updateCartProducts([])
                         alert("Order Successfully Created")
                     }
+                }).catch((err)=>{
+                    console.log(err)
                 })
             } else {
                 fetch("/api/customers", {
@@ -142,7 +144,8 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                             }
                         })
                     }
-                }).catch(() => {
+                }).catch((err) => {
+                    console.log(err)
                     alert("Error Creating Order")
                 })
             }

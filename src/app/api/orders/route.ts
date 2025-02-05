@@ -5,14 +5,15 @@ type order_item = {
     product: string,
     quantity: string,
     variation: {
-        _key:string
-        variation_name:string,
-        variation_option:string
+        _key: string
+        variation_name: string,
+        variation_option: string
     },
     price: string
 }
 export async function POST(request: Request) {
     const formData = await request.json()
+    console.log("orders->", formData)
     const order_items = formData.productData.map((order_item: order_item) => {
         return {
             _key: generateKey(),
