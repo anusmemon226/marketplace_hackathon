@@ -12,26 +12,27 @@ export async function GET() {
 }
 export async function POST(request: Request) {
     const formData = await request.json()
-    const createCustomer = await client.mutate([
-        {
-            create: {
-                _type: "customer",
-                address: formData.address,
-                postal_code: formData.zipcode,
-                email: formData.email,
-                firstname: formData.firstname,
-                lastname: formData.lastname,
-                account_creation_date: new Date().toISOString(),
-                username: formData.firstname.toLowerCase() + "" + formData.lastname.toLowerCase(),
-                phone_number: formData.phone,
-                city: {
-                    _ref: formData.city
-                },
-                country: {
-                    _ref: formData.country
-                }
-            }
-        }
-    ])
-    return NextResponse.json(createCustomer)
+    // const createCustomer = await client.mutate([
+    //     {
+    //         create: {
+    //             _type: "customer",
+    //             address: formData.address,
+    //             postal_code: formData.zipcode,
+    //             email: formData.email,
+    //             firstname: formData.firstname,
+    //             lastname: formData.lastname,
+    //             account_creation_date: new Date().toISOString(),
+    //             username: formData.firstname.toLowerCase() + "" + formData.lastname.toLowerCase(),
+    //             phone_number: formData.phone,
+    //             city: {
+    //                 _ref: formData.city
+    //             },
+    //             country: {
+    //                 _ref: formData.country
+    //             }
+    //         }
+    //     }
+    // ])
+    // return NextResponse.json(createCustomer)
+    return NextResponse.json({name:"Hello"})
 }
