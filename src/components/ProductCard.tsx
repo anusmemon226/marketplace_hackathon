@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { urlFor } from '@/utils/sanityImageBuilder'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-function ProductCard({ data }: any) {
+import { productData } from '@/types';
+function ProductCard({ data }: {data:productData}) {
     const router = useRouter()
     const productImageUrl = data?.main_image
         ? urlFor(data.main_image)?.url()
@@ -22,7 +23,7 @@ function ProductCard({ data }: any) {
                 <p className='text-[16px] font-medium text-[#898989] py-1'></p>
                 <div className='flex flex-wrap items-center justify-between py-1'>
                     <p className='font-bold text-[20px]'>${data?.price}</p>
-                    <span className='text-[#B0B0B0] text-[16px] font-regular'><s>${Number(parseFloat(data?.price) + (parseFloat(data?.price) * 0.10)).toFixed(2)}</s></span>
+                    <span className='text-[#B0B0B0] text-[16px] font-regular'><s>${Number(data?.price+ (data?.price * 0.10)).toFixed(2)}</s></span>
                 </div>
             </div>
             {showPopup && (

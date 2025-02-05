@@ -57,7 +57,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                 }
             })
             let customers = await (await fetch("http://localhost:3000/api/customers")).json()
-            customers = customers.filter((customer: any) => {
+            customers = customers.filter((customer: {email:string,_id:string}) => {
                 return customer.email == formData.email
             })
 

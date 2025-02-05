@@ -5,7 +5,14 @@ import { useStore } from '@/store'
 import RelatedProducts from './RelatedProducts'
 import { urlFor } from '@/utils/sanityImageBuilder'
 import Image from 'next/image'
+import { productData } from '@/types'
 const generateKey = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+type variation = {
+    _key: string,
+    variation_name: string,
+    variation_options: string[]
+}
 
 const ProductDetail = ({ slug }: { slug: string }) => {
     const { products } = useStore()
@@ -14,7 +21,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
     const [mainImage, setMainImage] = useState<string | null>(null)
     const [sideImages, setSideImages] = useState<string[]>([])
     const [currentVariation, setCurrentVariation] = useState<{ _key: string, variation_name: string, variation_option: string }[]>([])
-    const filteredProduct = products.filter((product: any) => {
+    const filteredProduct = products.filter((product: productData) => {
         return product.slug.current == slug
     })
 
@@ -29,26 +36,28 @@ const ProductDetail = ({ slug }: { slug: string }) => {
     }
 
     const handleMainImage = (selectedImage: string) => {
-        setSideImages((prevState: any) =>
-            [...prevState.filter((image: any) => image !== selectedImage), mainImage]
-        );
-        setMainImage(selectedImage)
-    }
+        if (mainImage !== null) {
+            setSideImages((prevState: string[]) =>
+                [...prevState.filter((image: string) => image !== selectedImage), mainImage]
+            );
+        }
+        setMainImage(selectedImage);
+    };
 
     useEffect(() => {
-        const initialVariation = filteredProduct[0]?.variation_details?.map((variation: any) => (
-            {
+        const initialVariation = filteredProduct[0]?.variation_details?.map((variation: variation) => {
+            return {
                 _key: generateKey(),
                 variation_name: variation.variation_name,
                 variation_option: variation.variation_options[0]
             }
-        )) || []
+        })
         setCurrentVariation([...currentVariation, ...initialVariation])
 
         const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
         setMainImage(main_image!)
 
-        const sideImages = filteredProduct[0]?.product_images?.map((product_image: any) => {
+        const sideImages = filteredProduct[0]?.product_images?.map((product_image: string) => {
             return urlFor(product_image)?.url()
         })
         setSideImages(sideImages)
@@ -135,7 +144,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
                         </p>
                         {
                             filteredProduct[0]?.variation_details != null ?
-                                filteredProduct[0]?.variation_details.map((variation: any, index: any) => {
+                                filteredProduct[0]?.variation_details.map((variation: variation, index: number) => {
                                     return (
                                         <React.Fragment key={index}>
                                             {
@@ -144,7 +153,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
                                                         <p className='text-[16px] text-[#9F9F9F]'>{variation.variation_name}</p>
                                                         <div className='flex gap-x-4 mt-4'>
                                                             {
-                                                                variation.variation_options.map((options: any, index: any) => {
+                                                                variation.variation_options.map((options: string, index: number) => {
                                                                     const isActive = currentVariation.some(({ variation_name, variation_option }) => {
                                                                         return variation_name == variation.variation_name && variation_option == options
                                                                     })
@@ -158,7 +167,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
                                                         <p className='text-[16px] text-[#9F9F9F]'>{variation.variation_name}</p>
                                                         <div className='flex gap-x-2 mt-4'>
                                                             {
-                                                                variation.variation_options.map((options: any, index: any) => {
+                                                                variation.variation_options.map((options: string, index: number) => {
                                                                     const isActive = currentVariation.some(({ variation_name, variation_option }) => {
                                                                         return variation_name == variation.variation_name && variation_option == options
                                                                     })

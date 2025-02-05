@@ -8,6 +8,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { RxCross1 } from "react-icons/rx";
 import CartDrawer from './CartDrawer';
 import { useStore } from '@/store';
+import { cartProduct } from '@/types';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -31,11 +32,11 @@ function Navbar() {
         setProducts(resp)
     }
     const setCartProductsIfExist = () => {
-        let cartProducts = localStorage.getItem("CartProducts")
+        let cartProducts: string | null  = localStorage.getItem("CartProducts")
         cartProducts = JSON.parse(cartProducts!)
-        Array.isArray(cartProducts) ? cartProducts.map((cartProduct) => {
+        Array.isArray(cartProducts) && cartProducts?.map((cartProduct:cartProduct) => {
             setCartProducts(cartProduct)
-        }) : null
+        })
     }
     useEffect(() => {
         fetchProducts()
@@ -43,7 +44,7 @@ function Navbar() {
             setShowNavbar(false)
         })
         setCartProductsIfExist()
-    }, [])
+    }, [null])
 
     useEffect(() => {
         setCartCount(cartProducts.length)

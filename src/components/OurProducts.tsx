@@ -1,6 +1,7 @@
 "use client"
 import ProductCard from '@/components/ProductCard'
 import { useStore } from '@/store'
+import { productData } from '@/types'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -14,7 +15,7 @@ function OurProducts() {
       </div>
       <div className='flex gap-8 justify-center flex-wrap pt-8'>
         {
-          products.map((product:any,index:any) => {
+          products.map((product:productData,index:number) => {
             return (index < 4) ? <ProductCard key={index} data={product}/> : null  
           })
         }

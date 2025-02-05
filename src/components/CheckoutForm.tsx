@@ -2,11 +2,33 @@
 import React, { useEffect, useState } from 'react'
 import CheckOutPaymentCart from './CheckOutPaymentCart'
 
+type city = {
+    _id: string,
+    city_name: string,
+    slug: {
+        current:string
+        _type:string
+    },
+    country: {
+        _id: string,
+        country_name: string
+    }
+}
+type country = {
+    _id: string,
+    country_name: string,
+    slug: {
+        current:string
+        _type:string
+    }
+}
+
 function CheckoutForm() {
     const [isEmpty, setIsEmpty] = useState(false)
     const [countries, setCountries] = useState([])
     const [cities, setCities] = useState([])
-    const [citiesByCountry,setCitiesByCountry] = useState([])
+    const [citiesByCountry, setCitiesByCountry] = useState([])
+    console.log(citiesByCountry)
     const [checkoutForm, setCheckoutForm] = useState({
         firstname: "",
         lastname: "",
@@ -64,14 +86,14 @@ function CheckoutForm() {
                         {isEmpty && checkoutForm.country == "" ? <p className='text-red-600'>Required...</p> : null}
                         <select onChange={(e) => {
                             setCheckoutForm({ ...checkoutForm, country: e.target.value })
-                            let filteredCities = cities.filter((city: any) => {
+                            const filteredCities = cities.filter((city: city) => {
                                 return city.country._id == e.target.value
                             })
                             setCitiesByCountry(filteredCities)
                         }} name="" id="" className='h-[75px] text-[#9F9F9F] w-full border border-[#9F9F9F] mt-6 rounded-xl px-4'>
                             <option>Select Country</option>
                             {
-                                countries.length > 0 && countries.map((country: any) => {
+                                countries.length > 0 && countries.map((country: country) => {
                                     return (
                                         <option key={country._id} value={country._id}>{country.country_name}</option>
                                     )
@@ -89,7 +111,7 @@ function CheckoutForm() {
                             <option value="">Select City</option>
 
                             {
-                                citiesByCountry.length > 0 && checkoutForm.country && citiesByCountry.map((city: any) => {
+                                citiesByCountry.length > 0 && checkoutForm.country && citiesByCountry.map((city: city) => {
                                     return <option key={city._id} value={city._id}>{city.city_name}</option>
                                 })
                             }

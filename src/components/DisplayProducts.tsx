@@ -2,6 +2,7 @@
 import { useStore } from '@/store'
 import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
+import { productData } from '@/types'
 
 const DisplayProducts = () => {
     const { products } = useStore()
@@ -23,7 +24,7 @@ const DisplayProducts = () => {
         <>
             <div className='flex gap-8 justify-center flex-wrap py-6'>
                 {
-                    products.slice((currentPage-1)*10,currentPage*10).map((product: any, index: any) => {
+                    products.slice((currentPage-1)*10,currentPage*10).map((product: productData, index: number) => {
                         return <ProductCard key={index} data={product} />
                     })
                 }
