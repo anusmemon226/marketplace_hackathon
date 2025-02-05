@@ -103,7 +103,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     method: "POST",
                     body: JSON.stringify(formData),
                     headers: {
-                        'Content-Type': 'applicaation/json'
+                        'Content-Type': 'application/json'
                     }
                 }).then((res) => {
                     return res.json()
