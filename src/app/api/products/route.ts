@@ -1,9 +1,9 @@
 import { type SanityDocument } from "next-sanity";
 import { client } from "@/sanity/client";
 import { NextResponse } from "next/server";
-
 export async function GET() {
-    const PRODUCTS_QUERY = `*[_type == "product"]{
+  const PRODUCTS_QUERY = `*[_type == "product"]{
+        _id,
         product_name,
         added_at,
         slug,
@@ -18,7 +18,7 @@ export async function GET() {
           category_name
         }
       }`;
-    const options = { next: { revalidate: 30 } };
-    const products = await client.fetch<SanityDocument[]>(PRODUCTS_QUERY, {}, options);
-    return NextResponse.json(products)
+  const options = { next: { revalidate: 30 } };
+  const products = await client.fetch<SanityDocument[]>(PRODUCTS_QUERY, {}, options);
+  return NextResponse.json(products)
 }

@@ -1,8 +1,60 @@
 "use client"
-import RelatedProducts from '@/components/RelatedProducts'
+import React, { useEffect, useState } from 'react'
+import AddToCartButton from './AddToCartButton'
+import { useStore } from '@/store'
+import RelatedProducts from './RelatedProducts'
+import { urlFor } from '@/utils/sanityImageBuilder'
 import Image from 'next/image'
-import React from 'react'
-function page() {
+const generateKey = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+const ProductDetail = ({ slug }: { slug: string }) => {
+    const { products } = useStore()
+    const [quantity, setQuantity] = useState(1)
+
+    const [mainImage, setMainImage] = useState<string | null>(null)
+    const [sideImages, setSideImages] = useState<string[]>([])
+    const [currentVariation, setCurrentVariation] = useState<{ _key: String, variation_name: string, variation_option: string }[]>([])
+    const filteredProduct = products.filter((product: any) => {
+        return product.slug.current == slug
+    })
+
+    const handleCurrentVariation = (var_name: string, var_option: string) => {
+        setCurrentVariation((prevVariations) =>
+            prevVariations.map((variation) =>
+                variation.variation_name === var_name
+                    ? { ...variation, variation_option: var_option }
+                    : variation
+            )
+        );
+    }
+
+    const handleMainImage = (selectedImage: string) => {
+        setSideImages((prevState: any) =>
+            [...prevState.filter((image: any) => image !== selectedImage), mainImage]
+        );
+        setMainImage(selectedImage)
+    }
+
+    useEffect(() => {
+        const initialVariation = filteredProduct[0]?.variation_details?.map((variation: any) => (
+            {
+                _key: generateKey(),
+                variation_name: variation.variation_name,
+                variation_option: variation.variation_options[0]
+            }
+        )) || []
+        setCurrentVariation([...currentVariation, ...initialVariation])
+
+        const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
+        setMainImage(main_image!)
+
+        const sideImages = filteredProduct[0]?.product_images?.map((product_image: any) => {
+            return urlFor(product_image)?.url()
+        })
+        setSideImages(sideImages)
+
+    }, [products])
+
     return (
         <div>
             <div className='bg-[#F9F1E7] py-5'>
@@ -22,7 +74,7 @@ function page() {
                     <svg width="2" height="37" viewBox="0 0 2 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <line x1="1" x2="1" y2="37" stroke="#9F9F9F" strokeWidth="2" />
                     </svg>
-                    <p className='text-[16px]'>Asgaard sofa</p>
+                    <p className='text-[16px]'>{filteredProduct[0]?.product_name}</p>
                 </div>
             </div>
             <div className='w-[90%] 2xl:w-[1240px] mx-auto'>
@@ -31,19 +83,32 @@ function page() {
                 <div className='flex max-lg:flex-col gap-x-5 py-8'>
                     <div className='flex max-md:flex-col-reverse max-md:items-center max-lg:justify-center gap-x-3 lg:w-[50%]'>
                         <div className='max-md:flex max-sm:justify-center overflow-x-scroll max-md:gap-5 max-md:mt-4'>
-                            {/* <Image src={ProductImage} className="w-[100px] h-[100px] lg:w-[80px] lg:h-[80px] mb-6" alt='product' style={{  objectFit: "cover" }} />
-                            <Image src={ProductImage} className="w-[100px] h-[100px] lg:w-[80px] lg:h-[80px] mb-6" alt='product' style={{  objectFit: "cover" }} />
-                            <Image src={ProductImage} className="w-[100px] h-[100px] lg:w-[80px] lg:h-[80px] mb-6" alt='product' style={{  objectFit: "cover" }} />
-                            <Image src={ProductImage} className="w-[100px] h-[100px] lg:w-[80px] lg:h-[80px] mb-6" alt='product' style={{  objectFit: "cover" }} /> */}
+                            {
+                                sideImages?.map((image, index) => {
+                                    return (
+                                        <Image onClick={() => handleMainImage(image)} key={index} src={image} className='bg-gray-100 my-1' width={100} height={100} style={{ width: "100px", height: "100px", objectFit: "contain" }} alt={filteredProduct[0]?.product_name} />
+                                    )
+                                })
+                            }
                         </div>
                         <div className='lg:flex-1'>
-                            {/* <Image src={ProductImage} className="w-[500px] lg:w-[420px]" alt='product' style={{ height: 500, objectFit: "cover" }} /> */}
+                            {
+                                mainImage && (
+                                    <Image
+                                        src={mainImage}
+                                        width={500}
+                                        height={500}
+                                        style={{ width: "500px", height: "500px", objectFit: "contain" }}
+                                        alt={filteredProduct[0]?.product_name}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                     <div className='w-[100%]  lg:w-[50%]'>
-                        <h1 className='text-[42px]'>Asgaard sofa</h1>
-                        <p className='text-[24px] font-medium text-[#9F9F9F]'>Rs. 250,000.00</p>
-                        <div className='flex flex-wrap items-center gap-x-4 gap-y-2 py-2'>
+                        <h1 className='text-[42px]'>{ }</h1>
+                        <p className='text-[24px] font-medium text-[#9F9F9F]'>${filteredProduct[0]?.price}</p>
+                        {/* <div className='flex flex-wrap items-center gap-x-4 gap-y-2 py-2'>
                             <div className='flex gap-x-2'>
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9 0L12 6L18 6.75L13.88 11.37L15 18L9 15L3 18L4.13 11.37L0 6.75L6 6L9 0Z" fill="#FFC700" />
@@ -65,33 +130,59 @@ function page() {
                                 <line x1="0.5" x2="0.5" y2="30" stroke="#9F9F9F" />
                             </svg>
                             <p className='text-[#9F9F9F] text-[16px]'>5 Customer Review</p>
-                        </div>
-                        <p className='text-[16px] leading-[19.5px] sm:w-[450px] py-2'>Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound.
+                        </div> */}
+                        <p className='text-[16px] leading-[19.5px] sm:w-[450px] py-2'>{filteredProduct[0]?.description.slice(0, 250)}...
                         </p>
-                        <div className='py-3'>
-                            <p className='text-[16px] text-[#9F9F9F]'>Size</p>
-                            <div className='flex gap-x-4 mt-4'>
-                                <button className='text-white rounded-lg bg-[#B88E2F] w-[30px] h-[30px]'>L</button>
-                                <button className='text-black rounded-lg bg-[#F9F1E7] w-[30px] h-[30px]'>XL</button>
-                                <button className='text-black rounded-lg bg-[#F9F1E7] w-[30px] h-[30px]'>XS</button>
-                            </div>
-                        </div>
-                        <div className='py-3'>
-                            <p className='text-[16px] text-[#9F9F9F]'>Color</p>
-                            <div className='flex gap-x-4 mt-4'>
-                                <div className='w-[30px] h-[30px] bg-[#816DFA] rounded-full'></div>
-                                <div className='w-[30px] h-[30px] bg-[#000000] rounded-full'></div>
-                                <div className='w-[30px] h-[30px] bg-[#B88E2F] rounded-full'></div>
-                            </div>
-                        </div>
+                        {
+                            filteredProduct[0]?.variation_details != null ?
+                                filteredProduct[0]?.variation_details.map((variation: any, index: any) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            {
+                                                variation.variation_name == "Color" ?
+                                                    <div className='py-3'>
+                                                        <p className='text-[16px] text-[#9F9F9F]'>{variation.variation_name}</p>
+                                                        <div className='flex gap-x-4 mt-4'>
+                                                            {
+                                                                variation.variation_options.map((options: any, index: any) => {
+                                                                    const isActive = currentVariation.some(({ variation_name, variation_option }) => {
+                                                                        return variation_name == variation.variation_name && variation_option == options
+                                                                    })
+                                                                    return <button onClick={() => handleCurrentVariation(variation.variation_name, options)} key={index} className={`w-[30px] h-[30px] rounded-full  ${isActive ? "border-4 border-gray-600" : "border border-gray-600"}`} style={{ backgroundColor: options }}></button>
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className='py-3'>
+                                                        <p className='text-[16px] text-[#9F9F9F]'>{variation.variation_name}</p>
+                                                        <div className='flex gap-x-2 mt-4'>
+                                                            {
+                                                                variation.variation_options.map((options: any, index: any) => {
+                                                                    const isActive = currentVariation.some(({ variation_name, variation_option }) => {
+                                                                        return variation_name == variation.variation_name && variation_option == options
+                                                                    })
+                                                                    return options != "" ? <button onClick={() => handleCurrentVariation(variation.variation_name, options)} key={index} className={`rounded-lg ${isActive ? "bg-[#B88E2F] text-white" : "bg-gray-300 text-black"} px-2 h-[30px]`}>{options}</button> : null
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                            }
+                                        </React.Fragment>
+
+                                    )
+                                }) : null
+                        }
+
+
                         <div className='flex flex-wrap max-sm:flex-col max-sm:items-start gap-x-2 justify-between items-center py-3'>
                             <div className='flex justify-around items-center w-[123px] h-[64px] border border-[#9F9F9F] rounded-lg'>
-                                <span className='text-[16px] cursor-pointer'>-</span>
-                                <p className='text-[16px]'>1</p>
-                                <span className='text-[16px] cursor-pointer'>+</span>
+                                <span onClick={() => { if (quantity > 1) { setQuantity(quantity - 1) } }} className='text-[16px] cursor-pointer'>-</span>
+                                <p className='text-[16px]'>{quantity}</p>
+                                <span className='text-[16px] cursor-pointer' onClick={() => setQuantity(quantity + 1)}>+</span>
                             </div>
                             <div className='flex-1 max-sm:mt-3'>
-                                <button className='text-[18px] max-sm:mr-2 max-sm:mt-2 sm:mx-2 border border-black px-4 py-4 rounded-xl'>Add To Cart</button>
+                                <AddToCartButton productData={filteredProduct[0]} variation={currentVariation} quantity={quantity} />
                                 <button className='text-[18px] max-sm:mr-2 max-sm:mt-2 sm:mx-2 border border-black px-4 py-4 rounded-xl'>Comparison</button>
                             </div>
                         </div>
@@ -103,22 +194,22 @@ function page() {
                                     <p className='text-[#9F9F9F] text-[16px]'>SKU</p>
                                     <span className='text-[#9F9F9F] text-[16px]'>:</span>
                                 </div>
-                                <p className='flex-1 ml-2 text-[#9F9F9F] text-[16px]'>SS001</p>
+                                <p className='flex-1 ml-2 text-[#9F9F9F] text-[16px]'>{filteredProduct[0]?._id.slice(0, 5)}</p>
                             </div>
                             <div className='flex flex-wrap py-1'>
                                 <div className="flex justify-between w-[80px]">
                                     <p className='text-[#9F9F9F] text-[16px]'>Category</p>
                                     <span className='text-[#9F9F9F] text-[16px]'>:</span>
                                 </div>
-                                <p className='flex-1 ml-2 text-[#9F9F9F] text-[16px]'>Sofas</p>
+                                <p className='flex-1 ml-2 text-[#9F9F9F] text-[16px]'>{filteredProduct[0]?.category.category_name}</p>
                             </div>
-                            <div className='flex flex-wrap py-1'>
+                            {/* <div className='flex flex-wrap py-1'>
                                 <div className='flex justify-between w-[80px]'>
                                     <p className='text-[#9F9F9F] text-[16px]'>Tags</p>
                                     <span className='text-[#9F9F9F] text-[16px]'>:</span>
                                 </div>
                                 <p className='flex-1 ml-2 text-[#9F9F9F] text-[16px]'>Sofa, Chair, Home, Shop</p>
-                            </div>
+                            </div> */}
                             <div className='flex flex-wrap py-1'>
                                 <div className='flex justify-between w-[80px]'>
                                     <p className='text-[#9F9F9F] text-[16px]'>Share</p>
@@ -162,8 +253,7 @@ function page() {
                         <h2 className='text-[24px] font-medium text-center text-[#9F9F9F]'>Reviews [5]</h2>
                     </div>
                     <div className='w-[80%] mx-auto space-y-5 py-6'>
-                        <p className='text-[16px] text-[#9F9F9F]'>Embodying the raw, wayward spirit of rock ‘n’ roll, the Kilburn portable active stereo speaker takes the unmistakable look and sound of Marshall, unplugs the chords, and takes the show on the road.</p>
-                        <p className='text-[16px] text-[#9F9F9F]'>Weighing in under 7 pounds, the Kilburn is a lightweight piece of vintage styled engineering. Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound that is both articulate and pronounced. The analogue knobs allow you to fine tune the controls to your personal preferences while the guitar-influenced leather strap enables easy and stylish travel.</p>
+                        <p className='text-[16px] text-[#9F9F9F]'>{filteredProduct[0]?.description}</p>
                     </div>
                     <div className='flex flex-wrap justify-center gap-y-6 gap-x-6 mt-4 items-center'>
                         <div className='bg-[#F9F1E7] flex justify-center items-center'>
@@ -174,10 +264,10 @@ function page() {
                         </div>
                     </div>
                 </div>
-                <RelatedProducts/>
+                <RelatedProducts />
             </div>
         </div>
     )
 }
 
-export default page
+export default ProductDetail

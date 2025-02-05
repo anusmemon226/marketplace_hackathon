@@ -7,7 +7,7 @@ function Footer() {
             <div className='py-10 mx-auto w-[95%] xl:w-[1240px]'>
                 <div className='flex flex-wrap'>
                     <div className='w-[100%] md:w-[50%] lg:w-[25%] max-md:pb-10 max-md:px-4'>
-                        <h2 className='font-bold text-[24px]'>Funiro.</h2>
+                        <Link href={"/"}><h2 className='font-bold text-[24px]'>Funiro.</h2></Link>
                         <div className='mt-8'>
                             <p className='text-[#9F9F9F] text-[16px] leading-[24px]'>400 University Drive Suite 200 Coral Gables,</p>
                             <p className='text-[#9F9F9F] text-[16px]'>FL 33134 USA</p>

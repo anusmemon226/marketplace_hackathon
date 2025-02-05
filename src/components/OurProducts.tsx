@@ -1,14 +1,12 @@
+"use client"
 import ProductCard from '@/components/ProductCard'
+import { useStore } from '@/store'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const fetchProducts = async () => {
-  const resp = await fetch("http://localhost:3000/api/products")
-  const products = await resp.json()
-  return products
-}
-
-async function OurProducts() {
-  const products = await fetchProducts()
+function OurProducts() {
+  const router = useRouter()
+  const {products} = useStore()
   return (
     <div className='py-6 xl:w-[1240px] w-[95%] mx-auto'>
       <div className='flex flex-col items-center'>
@@ -16,22 +14,14 @@ async function OurProducts() {
       </div>
       <div className='flex gap-8 justify-center flex-wrap pt-8'>
         {
-          products.map((item: any,index:any) => {
-            return <ProductCard key={index} data={item} />
+          products.map((product:any,index:any) => {
+            return (index < 4) ? <ProductCard key={index} data={product}/> : null  
           })
         }
-        {/* <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard /> */}
+
       </div>
       <div className='flex justify-center pt-8'>
-        <button className='border border-[#B88E2F] w-[245px] font-semibold text-[#B88E2F] text-[16px] py-3'>Show More</button>
+        <button onClick={()=>router.push("/shop")} className='border border-[#B88E2F] w-[245px] font-semibold text-[#B88E2F] text-[16px] py-3'>Show More</button>
       </div>
     </div>
   )

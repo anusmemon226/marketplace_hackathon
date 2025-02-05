@@ -1,41 +1,33 @@
 "use client"
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { urlFor } from '@/utils/sanityImageBuilder'
-import { useStore } from '@/store'
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 function ProductCard({ data }: any) {
-    const { setCartProducts } = useStore()
-    const productImageUrl = data.main_image
-        ? urlFor(data.main_image)?.width(550).height(310).url()
-        : null;
     const router = useRouter()
+    const productImageUrl = data?.main_image
+        ? urlFor(data.main_image)?.url()
+        : null;
     const [showPopup, setShowPopup] = useState(false)
-    const addToCart = () => {
-        console.log("Hello")
-        setCartProducts(data)
-    }
     return (
-        <div onClick={() => router.push(`/shop/${data.slug.current}`)} className='w-[285px] relative' onMouseLeave={() => setShowPopup(false)} onMouseEnter={() => setShowPopup(true)}>
+        <div className='w-[285px] relative' onMouseLeave={() => setShowPopup(false)} onMouseEnter={() => setShowPopup(true)}>
             <div className='flex justify-center items-center bg-[#E97171] absolute top-5 right-5 rounded-full w-[48px] h-[48px]'>
                 <p className='text-white text-[16px]'>-30%</p>
             </div>
             {productImageUrl && (
-                <img
-                    src={productImageUrl}
-                    style={{ width: "285px", height: "300px", objectFit: "contain" }}
-                />
+                <Image src={productImageUrl} width={300} height={300} className="m-auto" style={{width:"300px",height:"300px",objectFit:"contain"}} alt='Dining'/>
             )}
             <div className='bg-[#F4F5F7] p-4'>
-                <h2 className='font-semibold text-[24px] py-1'>{data.product_name}</h2>
+                <h2 className='font-semibold text-[24px] py-1'>{data?.product_name}</h2>
                 <p className='text-[16px] font-medium text-[#898989] py-1'></p>
                 <div className='flex flex-wrap items-center justify-between py-1'>
-                    <p className='font-bold text-[20px]'>${data.price}</p>
-                    <span className='text-[#B0B0B0] text-[16px] font-regular'><s>${Number(parseFloat(data.price) + (parseFloat(data.price) * 0.10)).toFixed(2)}</s></span>
+                    <p className='font-bold text-[20px]'>${data?.price}</p>
+                    <span className='text-[#B0B0B0] text-[16px] font-regular'><s>${Number(parseFloat(data?.price) + (parseFloat(data?.price) * 0.10)).toFixed(2)}</s></span>
                 </div>
             </div>
             {showPopup && (
                 <div className='flex flex-col justify-center items-center absolute top-0 left-0 bg-[#3A3A3A]/80 w-full h-full'>
-                    <button onClick={() => addToCart} className='bg-white text-[#B88E2F] text-[16px] font-semibold px-14 py-3'>Add to Cart</button>
+                    <button onClick={() => router.push(`/shop/${data?.slug.current}`)} className='bg-white text-[#B88E2F] text-[16px] font-semibold w-[80%] px-14 py-3 my-0.5'>View Product</button>
                     <div className='flex flex-wrap justify-between items-center gap-5 mt-6 px-2'>
                         <div className='flex items-center cursor-pointer'>
                             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

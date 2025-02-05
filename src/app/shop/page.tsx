@@ -1,31 +1,13 @@
-"use client"
 import BreadCrumbHero from '@/components/BreadCrumbHero'
-import ProductCard from '@/components/ProductCard'
+import DisplayProducts from '@/components/DisplayProducts'
 import WhyUs from '@/components/WhyUs'
-import { useStore } from '@/store'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-
-const fetchProducts = async () => {
-  const resp = await fetch("http://localhost:3000/api/products")
-  const products = await resp.json()
-  return products
-}
 function page() {
-  const [productsData,setProductsData] = useState([])
-  const { setProducts } = useStore()
-  useEffect(() => {
-    async function fetchData(){
-      const data = await fetchProducts()
-      setProductsData(data)
-    }
-    fetchData()
-    setProducts(productsData)
-  }, [])
   return (
     <div>
       <BreadCrumbHero title='Shop' />
-      <div className='bg-[#F9F1E7] py-8'>
+      {/* <div className='bg-[#F9F1E7] py-8'>
         <div className='w-[85%] 2xl:w-[1240px] mx-auto gap-x-4 flex max-lg:flex-col max-lg:gap-y-4 items-center justify-between'>
           <div className='flex max-lg:flex-wrap items-center'>
             <div className='flex items-center cursor-pointer'>
@@ -60,19 +42,10 @@ function page() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className='w-[95%] 2xl:w-[1240px] mx-auto py-10'>
-        <div className='flex gap-8 justify-center flex-wrap py-6'>
-          {productsData.map((item: any,index:any) => {
-            return <ProductCard key={index} data={item} />
-          })}
-        </div>
-        <div className='flex flex-wrap justify-center gap-x-8 py-10'>
-          <button className='bg-[#B88E2F] rounded-[10px] text-[20px] text-white px-6 py-3 my-2'>1</button>
-          <button className='bg-[#F9F1E7] rounded-[10px] text-[20px] px-6 py-3 my-2'>2</button>
-          <button className='bg-[#F9F1E7] rounded-[10px] text-[20px] px-6 py-3 my-2'>3</button>
-          <button className='bg-[#F9F1E7] rounded-[10px] text-[20px] text-center px-8 py-3 my-2'>Next</button>
-        </div>
+        <DisplayProducts/>
+        
       </div>
       <WhyUs />
     </div>
