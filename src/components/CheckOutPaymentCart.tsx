@@ -32,134 +32,21 @@ type setData = React.Dispatch<React.SetStateAction<{
 const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: checkoutForm, setData: setData, setIsEmpty: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const { cartProducts, updateCartProducts } = useStore()
     const [total, setTotal] = useState(0)
-    // const handleCheckoutFOrmData = async () => {
-
-    //     if (cartProducts.length == 0) {
-    //         alert("Please add Products to cart...!")
-    //         return
-    //     }
-
-    //     let flag = false
-
-    //     if (formData.address == "" || formData.city == "" || formData.country == "" || formData.email == "" || formData.firstname == "" || formData.lastname == "" || formData.phone == "" || formData.zipcode == "") {
-    //         flag = true
-    //     }
-
-    //     if (flag == true) {
-    //         setIsEmpty(true)
-    //     } else {
-    //         const productData = cartProducts.map((product: cartProduct) => {
-    //             return {
-    //                 product: product.productData._id,
-    //                 quantity: product.quantity,
-    //                 variation: product.variation,
-    //                 price: product.quantity * product.productData.price
-    //             }
-    //         })
-    //         let customers = await (await fetch("/api/customers")).json()
-    //         customers = customers.filter((customer: { email: string, _id: string }) => {
-    //             return customer.email == formData.email
-    //         })
-
-    //         if (customers.length > 0) {
-    //             fetch("/api/orders", {
-    //                 method: "POST",
-    //                 body: JSON.stringify(
-    //                     {
-    //                         customer: customers[0]._id,
-    //                         productData,
-    //                         total_price: total,
-    //                         order_note: formData.addition_info,
-    //                     }
-    //                 ),
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             }).then((resp) => {
-    //                 return resp.json()
-    //             }).then((res) => {
-    //                 if (res.transactionId != "") {
-    //                     setData({
-    //                         firstname: "",
-    //                         lastname: "",
-    //                         companyName: "",
-    //                         country: "",
-    //                         city: "",
-    //                         zipcode: "",
-    //                         phone: "",
-    //                         email: "",
-    //                         address: "",
-    //                         addition_info: ""
-    //                     })
-    //                     localStorage.removeItem("CartProducts")
-    //                     updateCartProducts([])
-    //                     alert("Order Successfully Created")
-    //                 }
-    //             }).catch((err) => {
-    //                 console.log(err)
-    //             })
-    //         } else {
-    //             const createCustomer = await fetch("/api/customers", {
-    //                 method: "POST",
-    //                 body: JSON.stringify(formData),
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             })
-    //             const response = await createCustomer.json()
-    //             if (response.transactionId) {
-    //                 const createOrder = await fetch("/api/orders", {
-    //                     method: "POST",
-    //                     body: JSON.stringify(
-    //                         {
-    //                             customer: response.documentIds[0],
-    //                             productData,
-    //                             total_price: total,
-    //                             order_note: formData.addition_info,
-    //                         }
-    //                     ),
-    //                     headers: {
-    //                         'Content-Type': 'application/json'
-    //                     }
-    //                 })
-    //                 const orderResponse = await createOrder.json()
-    //                 if (orderResponse.transactionId != "") {
-    //                     setData({
-    //                         firstname: "",
-    //                         lastname: "",
-    //                         companyName: "",
-    //                         country: "",
-    //                         city: "",
-    //                         zipcode: "",
-    //                         phone: "",
-    //                         email: "",
-    //                         address: "",
-    //                         addition_info: ""
-    //                     })
-    //                     localStorage.removeItem("CartProducts")
-    //                     updateCartProducts([])
-    //                     alert("Order Successfully Created")
-    //                 }
-    //             }
-    //         }
-
-
-    //     }
-
-    // }
     const handleCheckoutFOrmData = async () => {
+
         if (cartProducts.length == 0) {
             alert("Please add Products to cart...!")
-            return;
+            return
         }
 
-        let flag = false;
+        let flag = false
+
         if (formData.address == "" || formData.city == "" || formData.country == "" || formData.email == "" || formData.firstname == "" || formData.lastname == "" || formData.phone == "" || formData.zipcode == "") {
-            flag = true;
+            flag = true
         }
 
         if (flag == true) {
-            setIsEmpty(true);
+            setIsEmpty(true)
         } else {
             const productData = cartProducts.map((product: cartProduct) => {
                 return {
@@ -168,31 +55,30 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     variation: product.variation,
                     price: product.quantity * product.productData.price
                 }
-            });
-
-            let customers = await (await fetch("/api/customers")).json();
+            })
+            let customers = await (await fetch("/api/customers")).json()
             customers = customers.filter((customer: { email: string, _id: string }) => {
                 return customer.email == formData.email
-            });
+            })
 
             if (customers.length > 0) {
-                try {
-                    const createOrder = await fetch("/api/orders", {
-                        method: "POST",
-                        body: JSON.stringify({
+                fetch("/api/orders", {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
                             customer: customers[0]._id,
                             productData,
                             total_price: total,
                             order_note: formData.addition_info,
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json'
                         }
-                    });
-
-                    const orderResponse = await createOrder.json();
-                    if (orderResponse.transactionId != "") {
-                        // Reset checkout form and cart
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then((resp) => {
+                    return resp.json()
+                }).then((res) => {
+                    if (res.transactionId != "") {
                         setData({
                             firstname: "",
                             lastname: "",
@@ -204,66 +90,63 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                             email: "",
                             address: "",
                             addition_info: ""
-                        });
-                        localStorage.removeItem("CartProducts");
-                        updateCartProducts([]);
-                        alert("Order Successfully Created");
+                        })
+                        localStorage.removeItem("CartProducts")
+                        updateCartProducts([])
+                        alert("Order Successfully Created")
                     }
-                } catch (error) {
-                    console.error("Error creating order:", error);
-                    alert("Failed to create order");
-                }
+                }).catch((err) => {
+                    console.log(err)
+                })
             } else {
-                try {
-                    const createCustomer = await fetch("/api/customers", {
-                        method: "POST",
-                        body: JSON.stringify(formData),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    const response = await createCustomer.json();
-                    if (response.transactionId) {
-                        const createOrder = await fetch("/api/orders", {
-                            method: "POST",
-                            body: JSON.stringify({
-                                customer: response.documentIds[0],
-                                productData,
-                                total_price: total,
-                                order_note: formData.addition_info,
-                            }),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        });
-
-                        const orderResponse = await createOrder.json();
-                        if (orderResponse.transactionId != "") {
-                            // Reset checkout form and cart
-                            setData({
-                                firstname: "",
-                                lastname: "",
-                                companyName: "",
-                                country: "",
-                                city: "",
-                                zipcode: "",
-                                phone: "",
-                                email: "",
-                                address: "",
-                                addition_info: ""
-                            });
-                            localStorage.removeItem("CartProducts");
-                            updateCartProducts([]);
-                            alert("Order Successfully Created");
-                        }
+                const createCustomer = await fetch("/api/customers", {
+                    method: "POST",
+                    body: JSON.stringify(formData),
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                } catch (error) {
-                    console.error("Error creating customer:", error);
-                    alert("Failed to create customer");
-                }
+                })
+                const response = await createCustomer.json()
+                console.log(response)
+                // if (response.transactionId) {
+                //     const createOrder = await fetch("/api/orders", {
+                //         method: "POST",
+                //         body: JSON.stringify(
+                //             {
+                //                 customer: response.documentIds[0],
+                //                 productData,
+                //                 total_price: total,
+                //                 order_note: formData.addition_info,
+                //             }
+                //         ),
+                //         headers: {
+                //             'Content-Type': 'application/json'
+                //         }
+                //     })
+                //     const orderResponse = await createOrder.json()
+                //     if (orderResponse.transactionId != "") {
+                //         setData({
+                //             firstname: "",
+                //             lastname: "",
+                //             companyName: "",
+                //             country: "",
+                //             city: "",
+                //             zipcode: "",
+                //             phone: "",
+                //             email: "",
+                //             address: "",
+                //             addition_info: ""
+                //         })
+                //         localStorage.removeItem("CartProducts")
+                //         updateCartProducts([])
+                //         alert("Order Successfully Created")
+                //     }
+                // }
             }
+
+
         }
+
     }
 
     useEffect(() => {
