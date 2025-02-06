@@ -107,8 +107,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     }
                 })
                 const response = await createCustomer.json()
-                console.log(response)
-                
+
                 if (response.transactionId) {
                     const createOrder = await fetch("/api/orders", {
                         method: "POST",

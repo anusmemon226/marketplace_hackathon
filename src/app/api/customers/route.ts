@@ -31,6 +31,10 @@ export async function POST(request: Request) {
             _type: "reference"
         }
     }
-    const createCustomer = await client.create(customerData)
+    const createCustomer = await client.mutate([
+        {
+            create : customerData
+        }
+    ])
     return NextResponse.json(createCustomer)
 }
