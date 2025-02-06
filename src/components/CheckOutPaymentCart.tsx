@@ -31,8 +31,9 @@ type setData = React.Dispatch<React.SetStateAction<{
 
 const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: checkoutForm, setData: setData, setIsEmpty: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const { cartProducts, updateCartProducts } = useStore()
+    const [isLoading, setLoading] = useState(false)
     const [total, setTotal] = useState(0)
-    const handleCheckoutFOrmData = async () => {
+    const handleCheckoutFormData = async () => {
 
         if (cartProducts.length == 0) {
             alert("Please add Products to cart...!")
@@ -48,6 +49,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
         if (flag == true) {
             setIsEmpty(true)
         } else {
+            setLoading(true)
             const productData = cartProducts.map((product: cartProduct) => {
                 return {
                     product: product.productData._id,
@@ -93,10 +95,13 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                         })
                         localStorage.removeItem("CartProducts")
                         updateCartProducts([])
+                        setLoading(false)
                         alert("Order Successfully Created")
                     }
                 }).catch((err) => {
                     console.log(err)
+                    alert(err)
+                    setLoading(false)
                 })
             } else {
                 const createCustomer = await fetch("/api/customers", {
@@ -139,6 +144,7 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                         })
                         localStorage.removeItem("CartProducts")
                         updateCartProducts([])
+                        setLoading(false)
                         alert("Order Successfully Created")
                     }
                 }
@@ -150,12 +156,17 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
     }
 
     useEffect(() => {
+        if (isLoading) {
+            document.body.style.overflow = "hidden"
+        }else{
+            document.body.style.overflow = "auto"
+        }
         let total = 0
         cartProducts.map((cartProduct: cartProduct) => {
             total += cartProduct.productData.price * cartProduct.quantity
         })
         setTotal(Number(total.toFixed(2)))
-    }, [cartProducts])
+    }, [cartProducts, isLoading])
 
     return (
         <div className='flex-1 py-16 px-8'>
@@ -198,8 +209,12 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                 <p className='text-justify text-[16px] py-3'>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <strong>privacy policy</strong>.</p>
             </div>
             <div className='flex justify-center mt-6'>
-                <button onClick={handleCheckoutFOrmData} className='border border-black text-[20px] py-4 w-[320px] rounded-xl'>Place Order</button>
+                <button onClick={handleCheckoutFormData} className='border border-black text-[20px] py-4 w-[320px] rounded-xl'>Place Order</button>
             </div>
+            {isLoading && <div className='flex flex-col justify-center items-center fixed top-0 left-0 h-full w-full bg-gray-600 bg-opacity-60'>
+                <div className='h-[50px] w-[50px] rounded-full border-4 border-t-transparent border-white animate-spin'></div>
+                <p className='p-2 text-white font-bold'>Creating Order...</p>
+            </div>}
         </div>
     )
 }
