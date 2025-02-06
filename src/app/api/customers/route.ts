@@ -32,5 +32,5 @@ export async function POST(request: Request) {
         }
     }
     const createCustomer = await client.create(customerData)
-    return NextResponse.json(customerData)
+    return NextResponse.json(createCustomer)
 }
