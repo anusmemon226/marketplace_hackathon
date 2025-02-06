@@ -107,41 +107,40 @@ const CheckOutPaymentCart = ({ formData, setData, setIsEmpty }: { formData: chec
                     }
                 })
                 const response = await createCustomer.json()
-                console.log(response)
-                // if (response.transactionId) {
-                //     const createOrder = await fetch("/api/orders", {
-                //         method: "POST",
-                //         body: JSON.stringify(
-                //             {
-                //                 customer: response.documentIds[0],
-                //                 productData,
-                //                 total_price: total,
-                //                 order_note: formData.addition_info,
-                //             }
-                //         ),
-                //         headers: {
-                //             'Content-Type': 'application/json'
-                //         }
-                //     })
-                //     const orderResponse = await createOrder.json()
-                //     if (orderResponse.transactionId != "") {
-                //         setData({
-                //             firstname: "",
-                //             lastname: "",
-                //             companyName: "",
-                //             country: "",
-                //             city: "",
-                //             zipcode: "",
-                //             phone: "",
-                //             email: "",
-                //             address: "",
-                //             addition_info: ""
-                //         })
-                //         localStorage.removeItem("CartProducts")
-                //         updateCartProducts([])
-                //         alert("Order Successfully Created")
-                //     }
-                // }
+                if (response.transactionId) {
+                    const createOrder = await fetch("/api/orders", {
+                        method: "POST",
+                        body: JSON.stringify(
+                            {
+                                customer: response.documentIds[0],
+                                productData,
+                                total_price: total,
+                                order_note: formData.addition_info,
+                            }
+                        ),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    const orderResponse = await createOrder.json()
+                    if (orderResponse.transactionId != "") {
+                        setData({
+                            firstname: "",
+                            lastname: "",
+                            companyName: "",
+                            country: "",
+                            city: "",
+                            zipcode: "",
+                            phone: "",
+                            email: "",
+                            address: "",
+                            addition_info: ""
+                        })
+                        localStorage.removeItem("CartProducts")
+                        updateCartProducts([])
+                        alert("Order Successfully Created")
+                    }
+                }
             }
 
 
