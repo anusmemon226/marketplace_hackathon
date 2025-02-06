@@ -12,26 +12,25 @@ export async function GET() {
 }
 export async function POST(request: Request) {
     const formData = await request.json()
-    const createCustomer = await client.create(
-        {
-            _type: "customer",
-            address: formData.address,
-            postal_code: formData.zipcode,
-            email: formData.email,
-            firstname: formData.firstname,
-            lastname: formData.lastname,
-            account_creation_date: new Date().toISOString(),
-            username: formData.firstname.toLowerCase() + "" + formData.lastname.toLowerCase(),
-            phone_number: formData.phone,
-            city: {
-                _ref: formData.city,
-                _type: "reference"
-            },
-            country: {
-                _ref: formData.country,
-                _type: "reference"
-            }
+    const customerData = {
+        _type: "customer",
+        address: formData.address,
+        postal_code: formData.zipcode,
+        email: formData.email,
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        account_creation_date: new Date().toISOString(),
+        username: formData.firstname.toLowerCase() + "" + formData.lastname.toLowerCase(),
+        phone_number: formData.phone,
+        city: {
+            _ref: formData.city,
+            _type: "reference"
+        },
+        country: {
+            _ref: formData.country,
+            _type: "reference"
         }
-    )
-    return NextResponse.json(createCustomer)
+    }
+    // const createCustomer = await client.create(customerData)
+    return NextResponse.json(customerData)
 }

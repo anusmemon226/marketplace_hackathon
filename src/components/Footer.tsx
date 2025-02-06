@@ -19,7 +19,7 @@ function Footer() {
                             <div className='flex flex-col mt-8'>
                                 <Link href={"/"} className='font-medium text-[16px] mb-8'>Home</Link>
                                 <Link href={"/shop"} className='font-medium text-[16px] mb-8'>Shop</Link>
-                                <Link href={"/about"} className='font-medium text-[16px] mb-8'>About</Link>
+                                {/* <Link href={"/about"} className='font-medium text-[16px] mb-8'>About</Link> */}
                                 <Link href={"/contact"} className='font-medium text-[16px] mb-8'>Contact</Link>
                             </div>
                         </div>
