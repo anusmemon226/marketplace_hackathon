@@ -24,7 +24,6 @@ const ProductDetail = ({ slug }: { slug: string }) => {
         return product.slug.current == slug
     })
 
-    
     const handleCurrentVariation = (var_name: string, var_option: string) => {
         setCurrentVariation((prevVariations) =>
             prevVariations.map((variation) =>
@@ -44,17 +43,21 @@ const ProductDetail = ({ slug }: { slug: string }) => {
         setMainImage(selectedImage);
     };
 
+    console.log(filteredProduct[0]?.product_name)
+
     useEffect(() => {
         if (products.length > 0) {
-            setCurrentVariation((prevVariation) =>
-                [...prevVariation, ...filteredProduct[0]?.variation_details?.map((variation: variation) => {
-                    return {
-                        _key: generateKey(),
-                        variation_name: variation.variation_name,
-                        variation_option: variation.variation_options[0]
-                    }
-                })]
-            )
+            if (filteredProduct[0].variation_details != null) {
+                setCurrentVariation((prevVariation) =>
+                    [...prevVariation, ...filteredProduct[0]?.variation_details?.map((variation: variation) => {
+                        return {
+                            _key: generateKey(),
+                            variation_name: variation.variation_name,
+                            variation_option: variation.variation_options[0]
+                        }
+                    })]
+                )
+            }
             const main_image = filteredProduct[0]?.main_image ? urlFor(filteredProduct[0]?.main_image)?.url() : null;
             setMainImage(main_image!)
             const sideImages = filteredProduct[0]?.product_images?.map((product_image: string) => {
@@ -115,7 +118,7 @@ const ProductDetail = ({ slug }: { slug: string }) => {
                         </div>
                     </div>
                     <div className='w-[100%]  lg:w-[50%]'>
-                        <h1 className='text-[42px]'>{ }</h1>
+                        <h1 className='text-[42px]'>{filteredProduct[0]?.product_name}</h1>
                         <p className='text-[24px] font-medium text-[#9F9F9F]'>${filteredProduct[0]?.price}</p>
                         {/* <div className='flex flex-wrap items-center gap-x-4 gap-y-2 py-2'>
                             <div className='flex gap-x-2'>
