@@ -1,0 +1,6 @@
+Test Case ID,Test Case Description,Test Steps,Expected Result,Actual Result,Status,Severity Level,Assigned To,Remarks
+TC001,Validate product listing page,Open product page > Verify products,Products displayed correctly,Products displayed correctly,Passed,Low,-,No issue found
+TC002,Cart Functionality,Add product to cart > Verify cart contents ,Cart updates with added product,Cart updates as expected,Passed,Medium,-,No issue found
+TC003,Responsiveness,Explore on mobile phones - web browsers,Layout adjusts properly to screen size,Layout adjusts properly to screen size ,Passed,Medium,-,No issue found
+TC004,Checkout form validation,Filled form with empty and invalid input,Error or Alert if there are invalid input,Error or Alert if there are invalid input,Passed,High,-,No issue found
+TC005,Order creation,"Added Products to cart, filled out checkout form and place order",Order created successfully,Order created successfully,Passed,High,-,No issue found
